@@ -45,4 +45,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void abrirJanelaDesenho (View View){
+        Intent intent = new Intent(this,  MainActivityDesenho.class);
+        startActivity(intent);
+    }
+
 }

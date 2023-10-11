@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -14,60 +13,64 @@ import java.text.NumberFormat;
 
 public class TipCalculatorActivity extends AppCompatActivity {
 
-    private EditText editTextvalor;
+    private EditText editTextValor;
     private TextView textViewValor;
-    private TextView textViewGorjeta;
     private TextView textViewPct;
-    private TextView textViewtotal;
+    private TextView textViewGorjeta;
+    private TextView textViewTotal;
     private SeekBar seekBar;
-    private double Valor;
-    private double porcentagem;
+    private double valor;
     private double gorjeta;
+    private double porcentagem;
     private double total;
-    private NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
-    private NumberFormat percentFormat = NumberFormat.getPercentInstance();
+    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+    NumberFormat pctFormat = NumberFormat.getPercentInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tip_calculator);
-
-        editTextvalor = findViewById(R.id.editTextNumber4);
-        textViewGorjeta = findViewById(R.id.textViewValor);
-        textViewPct = findViewById(R.id.textViewPct);
+        editTextValor = findViewById(R.id.editTextNumber4);
         textViewValor = findViewById(R.id.textViewValor);
-        textViewtotal = findViewById(R.id.textViewTotal);
+        textViewPct = findViewById(R.id.textViewPct);
+        textViewGorjeta = findViewById(R.id.textViewGorjeta);
+        textViewTotal = findViewById(R.id.textViewTotal);
         seekBar = findViewById(R.id.seekBar2);
-
-        editTextvalor.addTextChangedListener(new TextWatcher() {
+        editTextValor.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int valorInt;
-                try{
-                    valorInt = Integer.parseInt(editTextvalor.getText().toString());
-                }catch(NumberFormatException e){
+                try {
+                    valorInt = Integer.parseInt(editTextValor.getText().toString());
+                } catch (NumberFormatException e) {
                     valorInt = 0;
                 }
-                Valor = valorInt/100.00;
-                atualizarValores();
+                valor = valorInt/100.0;
+                recalcular();
             }
-
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
-
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                porcentagem = progress/100.0;
+                recalcular();
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
-    private void atualizarValores(){
-        textViewValor.setText(currencyFormat.format((Valor)));
+    private void recalcular() {
+        textViewValor.setText(currencyFormat.format(valor));
+        textViewPct.setText(pctFormat.format(porcentagem));
+        gorjeta = valor * porcentagem;
+        total = valor + gorjeta;
+        textViewGorjeta.setText(currencyFormat.format(gorjeta));
+        textViewTotal.setText(currencyFormat.format(total));
     }
-
-
-
 }
