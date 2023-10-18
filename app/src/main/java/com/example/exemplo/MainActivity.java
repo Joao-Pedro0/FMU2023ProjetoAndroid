@@ -50,4 +50,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void AbrirDataBase(View view){
+        Intent intent = new Intent(this, DataBaseActivity.class);
+        startActivity(intent);
+    }
+
 }
